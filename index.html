@@ -133,21 +133,21 @@ const price = { yellow:30, blue:30, green:30, water:10 };
 let qty = { yellow:0, blue:0, green:0, water:0 };
 
 function updateQty(item,val){
-  qty[item]+=val;
+  qty[item] += val;
   if(qty[item]<0) qty[item]=0;
   document.getElementById(item).innerText = qty[item];
   calculateTotal();
 }
 
 function calculateTotal(){
-  let total=0;
-  for(let k in qty){ total+=qty[k]*price[k]; }
+  let total = 0;
+  for(let k in qty){ total += qty[k]*price[k]; }
   document.getElementById("total").innerText = total;
 }
 
 function placeOrder(){
-  const name = document.getElementById("name").value;
-  const cls = document.getElementById("class").value;
+  const name = document.getElementById("name").value.trim();
+  const cls = document.getElementById("class").value.trim();
   const payment = document.getElementById("payment").value;
 
   if(!name || !cls || !payment){
@@ -157,37 +157,39 @@ function placeOrder(){
 
   const data = {
     name, cls, payment,
-    yellow:qty.yellow, blue:qty.blue, green:qty.green, water:qty.water,
-    total:document.getElementById("total").innerText
+    yellow: qty.yellow,
+    blue: qty.blue,
+    green: qty.green,
+    water: qty.water,
+    total: document.getElementById("total").innerText
   };
 
   fetch("https://script.google.com/macros/s/AKfycbxgcI2h_HgMVLe-P1mm0UlSoCVCdLHO6qkw4nwLtiebgl8Bj-5mrkf7OQzXit1dRB03/exec", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(data)
-});
- .then(response => response.text())
-.then(resp => {
-  alert("Order placed! Collect from Stall 57");
-  // Reset quantities
-  for(let k in qty){ qty[k]=0; document.getElementById(k).innerText=0; }
-  calculateTotal();
-})
-.catch(err => {
-  alert("Error placing order. Try again!");
-  console.error(err);
-});
-
-  alert("Order placed! Collect from Stall 57");
-
-  for(let k in qty){ qty[k]=0; document.getElementById(k).innerText=0; }
-  calculateTotal();
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.text())
+  .then(resp => {
+    alert("Order placed! Collect from Stall 57");
+    // Reset quantities
+    for(let k in qty){ qty[k] = 0; document.getElementById(k).innerText = 0; }
+    calculateTotal();
+    // Optional: clear name/class/payment
+    document.getElementById("name").value = "";
+    document.getElementById("class").value = "";
+    document.getElementById("payment").value = "";
+  })
+  .catch(err => {
+    alert("Error placing order. Try again!");
+    console.error(err);
+  });
 }
 </script>
 
+
 </body>
 </html>
+
 
 
