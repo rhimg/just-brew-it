@@ -162,9 +162,13 @@ function placeOrder(){
   };
 
   fetch("https://script.google.com/macros/s/AKfycbxgcI2h_HgMVLe-P1mm0UlSoCVCdLHO6qkw4nwLtiebgl8Bj-5mrkf7OQzXit1dRB03/exec", {
-    method:"POST",
-    body:JSON.stringify(data)
-  });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(data)
+});
+
 
   alert("Order placed! Collect from Stall 57");
 
@@ -175,3 +179,4 @@ function placeOrder(){
 
 </body>
 </html>
+
