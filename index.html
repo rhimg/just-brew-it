@@ -168,7 +168,17 @@ function placeOrder(){
   },
   body: JSON.stringify(data)
 });
-
+ .then(response => response.text())
+.then(resp => {
+  alert("Order placed! Collect from Stall 57");
+  // Reset quantities
+  for(let k in qty){ qty[k]=0; document.getElementById(k).innerText=0; }
+  calculateTotal();
+})
+.catch(err => {
+  alert("Error placing order. Try again!");
+  console.error(err);
+});
 
   alert("Order placed! Collect from Stall 57");
 
@@ -179,4 +189,5 @@ function placeOrder(){
 
 </body>
 </html>
+
 
