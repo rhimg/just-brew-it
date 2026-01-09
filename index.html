@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Just Brew It - Stall 57</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #fff9c4, #bbdefb, #c8e6c9);
+  padding: 15px;
+}
+
+.container {
+  max-width: 420px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+h1 { text-align: center; color: #ff6f00; }
+.stall { text-align:center; font-weight:bold; margin-bottom:15px; }
+
+.drink {
+  display:flex;
+  justify-content:space-between;
+  margin:10px 0;
+  background:#f5f5f5;
+  padding:10px;
+  border-radius:10px;
+}
+
+.controls button {
+  background:#ff6f00;
+  color:white;
+  border:none;
+  padding:6px 12px;
+  font-size:18px;
+  border-radius:6px;
+}
+
+.controls span { margin:0 10px; font-size:16px; }
+
+input, select {
+  width:100%;
+  padding:8px;
+  margin-top:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+.total {
+  text-align:center;
+  font-size:20px;
+  margin-top:15px;
+  font-weight:bold;
+}
+
+.submit {
+  width:100%;
+  padding:12px;
+  background:green;
+  color:white;
+  border:none;
+  font-size:18px;
+  border-radius:10px;
+  margin-top:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🥤 Just Brew It!</h1>
+  <div class="stall">Stall No: 57</div>
+
+  <input id="name" placeholder="Customer Name">
+  <input id="class" placeholder="Class & Section">
+
+  <div class="drink">
+    <div>💛 Sparkling Sip ₹30</div>
+    <div class="controls">
+      <button onclick="updateQty('yellow',-1)">-</button>
+      <span id="yellow">0</span>
+      <button onclick="updateQty('yellow',1)">+</button>
+    </div>
+  </div>
+
+  <div class="drink">
+    <div>💙 Blue Fade ₹30</div>
+    <div class="controls">
+      <button onclick="updateQty('blue',-1)">-</button>
+      <span id="blue">0</span>
+      <button onclick="updateQty('blue',1)">+</button>
+    </div>
+  </div>
+
+  <div class="drink">
+    <div>💚 Fizz Fusion ₹30</div>
+    <div class="controls">
+      <button onclick="updateQty('green',-1)">-</button>
+      <span id="green">0</span>
+      <button onclick="updateQty('green',1)">+</button>
+    </div>
+  </div>
+
+  <div class="drink">
+    <div>💧 Oxyrich Water ₹10</div>
+    <div class="controls">
+      <button onclick="updateQty('water',-1)">-</button>
+      <span id="water">0</span>
+      <button onclick="updateQty('water',1)">+</button>
+    </div>
+  </div>
+
+  <select id="payment">
+    <option value="">Select Payment Mode</option>
+    <option>Cash</option>
+    <option>UPI</option>
+  </select>
+
+  <div class="total">Total: ₹ <span id="total">0</span></div>
+
+  <button class="submit" onclick="placeOrder()">Place Order</button>
+</div>
+
+<script>
+const price = { yellow:30, blue:30, green:30, water:10 };
+let qty = { yellow:0, blue:0, green:0, water:0 };
+
+function updateQty(item,val){
+  qty[item]+=val;
+  if(qty[item]<0) qty[item]=0;
+  document.getElementById(item).innerText = qty[item];
+  calculateTotal();
+}
+
+function calculateTotal(){
+  let total=0;
+  for(let k in qty){ total+=qty[k]*price[k]; }
+  document.getElementById("total").innerText = total;
+}
+
+function placeOrder(){
+  const name = document.getElementById("name").value;
+  const cls = document.getElementById("class").value;
+  const payment = document.getElementById("payment").value;
+
+  if(!name || !cls || !payment){
+    alert("Please fill all details");
+    return;
+  }
+
+  const data = {
+    name, cls, payment,
+    yellow:qty.yellow, blue:qty.blue, green:qty.green, water:qty.water,
+    total:document.getElementById("total").innerText
+  };
+
+  fetch("https://script.google.com/macros/s/AKfycbxgcI2h_HgMVLe-P1mm0UlSoCVCdLHO6qkw4nwLtiebgl8Bj-5mrkf7OQzXit1dRB03/exec", {
+    method:"POST",
+    body:JSON.stringify(data)
+  });
+
+  alert("Order placed! Collect from Stall 57");
+
+  for(let k in qty){ qty[k]=0; document.getElementById(k).innerText=0; }
+  calculateTotal();
+}
+</script>
+
+</body>
+</html>
